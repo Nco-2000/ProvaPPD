@@ -6,7 +6,11 @@
 
 ## GETID
 
+## STATUS
+
 ## START
+
+## STOP
 
 ## QUIT
 

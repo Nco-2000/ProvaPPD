@@ -61,21 +61,20 @@ public class ClientProcessor implements Runnable{
                     String newId = this.getIdFromMessage(userInput);
                     if (newId != null) {
                         this.Id = Integer.valueOf(newId);
-                        //TODO garantir que o usuario nao use um id ja em uso, mas possa carregar o progresso de um id ja usado.
                         out.println("NEW ID SAVED: " + newId);
                     } else {
                         out.println("INVALID ID.");
                     }
                 }
 
+                else if (userInput.startsWith("GETID")) {
+                    out.println("ID: " + this.Id);
+                }
+
                 else if (userInput.startsWith("STATUS")) {
                     out.println("SERVER STATUS:");
                     out.println("\tNUMBER OF PHILOSOPHERS: " + this.philosophersManager.getNumberOfActimePhilosophers());
                     out.println("\tNUMBER OF FORKS: " + this.philosophersManager.getNumberOfForks());
-                }
-
-                else if (userInput.startsWith("GETID")) {
-                    out.println("ID: " + this.Id);
                 }
 
                 else if (userInput.startsWith("START")) {
@@ -94,8 +93,6 @@ public class ClientProcessor implements Runnable{
                             out.println("ERROR: A PHILOSOHER WITH ID: " + this.Id + " ALREADY EXISTS!");
                         }
                     }
-                    
-                    //TODO fazer o iniciar o filosofo.
                 }
 
                 else if (userInput.startsWith("STOP")) {
@@ -106,7 +103,6 @@ public class ClientProcessor implements Runnable{
                     } else {
                         out.println("ERROR: THIS CLIENT HAS NO ACCES TO PHILOSOPHER WITH ID: " + this.Id);
                     }
-                    //TODO fazer o filosofo parar.
                 }
 
                 else if (userInput.startsWith("QUIT")) {
