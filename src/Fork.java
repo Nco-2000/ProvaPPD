@@ -3,11 +3,17 @@ package src;
 public class Fork {
     
     private String name;
+    private int id;
 
     private Philosopher user;
 
-    public Fork (String name) {
+    public Fork (int id, String name) {
+        this.id = id;
         this.name = name;
+    }
+
+    public Integer getId() {
+        return this.id;
     }
 
     public String getName() {
@@ -37,6 +43,10 @@ public class Fork {
 
     public boolean isBeingUsed() {
         return this.user != null;
+    }
+
+    public synchronized void delete() {
+        this.user = null;
     }
 
 }

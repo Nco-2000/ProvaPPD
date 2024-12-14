@@ -11,6 +11,8 @@ public class Server {
     private String serverName;
     private int numberOfForks;
 
+    private PhilosophersManager philosophersManager = new PhilosophersManager();
+
     public Server () {
         this.port = 12345;
         this.numberOfForks = 5;
@@ -21,24 +23,14 @@ public class Server {
         this.numberOfForks = numberOfForks;
     }
 
-    final List<Fork> forks = new ArrayList<Fork>();
-    public void createForks() {
-        for (int i = 0; i < numberOfForks; i++) {
-            String name = "FORK " + new Integer(i + 1).toString();
-            forks.add(new Fork(name));
-        }
-    }
-
     public void start() throws IOException {
-
-        this.createForks();
 
         try (ServerSocket server = new ServerSocket(this.port)) {
             
             System.out.println("Servidor iniciado na porta: " + this.port);
 
             while (true) { 
-                new Thread(new ClientProcessor(server.accept())).start();
+                new Thread(new ClientProcessor(server.accept(), philosophersManager)).start();
             }
         }
     }

@@ -14,9 +14,11 @@ public class ClientProcessor implements Runnable{
     private int Id;
 
     private Philosopher philisopher;
+    private PhilosophersManager philosophersManager;
 
-    public ClientProcessor(Socket socket) {
+    public ClientProcessor(Socket socket, PhilosophersManager philosophersManager) {
         this.socket = socket;
+        this.philosophersManager = philosophersManager;
     }
 
     private void close() { //encerra a conexao do cliente.
@@ -66,16 +68,52 @@ public class ClientProcessor implements Runnable{
                     }
                 }
 
+                else if (userInput.startsWith("STATUS")) {
+                    out.println("SERVER STATUS:");
+                    out.println("\tNUMBER OF PHILOSOPHERS: " + this.philosophersManager.getNumberOfActimePhilosophers());
+                    out.println("\tNUMBER OF FORKS: " + this.philosophersManager.getNumberOfForks());
+                }
+
                 else if (userInput.startsWith("GETID")) {
                     out.println("ID: " + this.Id);
                 }
 
                 else if (userInput.startsWith("START")) {
+                    if (this.philisopher != null) {
+                        out.println("ERROR: THIS CLIENT ALREADY HAS A RUNNING PHILOSOPHER WITH ID: " + this.philisopher.getId());
+                    } else {
+                        if (this.Id == 0) {
+                            this.philisopher = this.philosophersManager.createPhilosopher(this);
+                            this.Id = this.philisopher.getId();
+                        } else {
+                            this.philisopher = this.philosophersManager.createPhilosopher(this, this.Id);
+                        }
+                        if (this.philisopher != null) {
+                            out.println("PHILOSOPHER: " + this.philisopher.getName() + " CREATED WITH ID: " + this.philisopher.getId());
+                        } else {
+                            out.println("ERROR: A PHILOSOHER WITH ID: " + this.Id + " ALREADY EXISTS!");
+                        }
+                    }
+                    
                     //TODO fazer o iniciar o filosofo.
+                }
+
+                else if (userInput.startsWith("STOP")) {
+                    if (this.philisopher != null) {
+                        this.philosophersManager.deletePhilosopher(this.Id);
+                        this.philisopher = null;
+                        out.println("PHILOSOPHER WITH ID: " + this.Id + " DELETED.");
+                    } else {
+                        out.println("ERROR: THIS CLIENT HAS NO ACCES TO PHILOSOPHER WITH ID: " + this.Id);
+                    }
+                    //TODO fazer o filosofo parar.
                 }
 
                 else if (userInput.startsWith("QUIT")) {
                     out.println("CLOSING CONNECTION..." + this.Id);
+                    if (this.philisopher != null) {
+                        this.philosophersManager.deletePhilosopher(this.Id);
+                    }
                     this.close();
                 }
 
@@ -86,7 +124,9 @@ public class ClientProcessor implements Runnable{
 
 
         } catch (IOException e) {
-            System.out.println("FATAL ERROR: " + e);
+            
+        } finally {
+            //this.close();
         }
 
 
