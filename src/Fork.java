@@ -24,6 +24,17 @@ public class Fork {
         return this.user;
     }
 
+    public String getUserName() {
+        try {
+            if (this.getUser() != null) {
+                return this.user.getName();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
     public synchronized void pickUp(Philosopher philosopher) throws InterruptedException { //synchronized = Região Crítica.
 
         while (this.user != null && !this.user.equals(philosopher)) { 
@@ -43,6 +54,17 @@ public class Fork {
 
     public boolean isBeingUsed() {
         return this.user != null;
+    }
+
+    public boolean isBeingUsedBy(Philosopher philosopher) {
+        try {
+            if (this.user.equals(philosopher)) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
     }
 
     public synchronized void delete() {

@@ -15,6 +15,7 @@ public class ClientProcessor implements Runnable{
 
     private Philosopher philisopher;
     private PhilosophersManager philosophersManager;
+    private PhilosophersManagerGUI gui;
 
     public ClientProcessor(Socket socket, PhilosophersManager philosophersManager) {
         this.socket = socket;
@@ -52,7 +53,7 @@ public class ClientProcessor implements Runnable{
             out.println("220 Connected");
 
             String userInput;
-            while((userInput = in.readLine()) != null) {
+            while((userInput = in.readLine().toUpperCase()) != null) {
                 if (userInput.startsWith("HELLO")) {
                     out.println("HI " + this.Id);
                 }
@@ -71,10 +72,45 @@ public class ClientProcessor implements Runnable{
                     out.println("ID: " + this.Id);
                 }
 
+                else if (userInput.startsWith("SHOWTABLE")) {
+                    if (this.gui == null) {
+                        this.gui = new PhilosophersManagerGUI(this.philosophersManager);
+                    } else {
+                        out.println("THE GUI IS ALREADY OPENED.");
+                    }
+                }
+
+                else if (userInput.startsWith("HIDETABLE")) {
+                    if (this.gui != null) {
+                        this.gui.closeGUI();
+                        this.gui = null;
+                    }
+                    else {
+                        out.println("NO GUI IS OPEN TO CLOSE.");
+                    }
+                }
+
                 else if (userInput.startsWith("STATUS")) {
                     out.println("SERVER STATUS:");
                     out.println("\tNUMBER OF PHILOSOPHERS: " + this.philosophersManager.getNumberOfActimePhilosophers());
                     out.println("\tNUMBER OF FORKS: " + this.philosophersManager.getNumberOfForks());
+                }
+
+                else if (userInput.startsWith("STATISTICS")) {
+                    if (this.philisopher != null) {
+                        out.println("SHOWING CURRENT: " + this.philisopher.getName() + " STATISTICS:");
+                        out.println("\tID: " + this.philisopher.getId());
+                        out.println("\tNUMBER OF MEALS: " + this.philisopher.getNumberOfMeals());
+                        out.println("\tNUMBER OF THOUGHTS: " + this.philisopher.getNumberOfThoughts());
+                    } else  if (this.philosophersManager.getPhilosopherLog(this.Id) != null) {
+                        PhilosopherLog philosopherLog = this.philosophersManager.getPhilosopherLog(this.Id);
+                        out.println("SHOWING STORED: " + philosopherLog.getName() + " STATISTICS:");
+                        out.println("\tID: " + philosopherLog.getId());
+                        out.println("\tNUMBER OF MEALS: " + philosopherLog.getNumberOfMeals());
+                        out.println("\tNUMBER OF THOUGHTS: " + philosopherLog.getNumberOfThoughts());
+                    } else {
+                        out.println("NO RECORD FOR PHILOSOPHER WITH ID: " + this.Id);
+                    }
                 }
 
                 else if (userInput.startsWith("START")) {

@@ -2,25 +2,23 @@ package src;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Server {
     
     private int port;
     private String serverName;
-    private int numberOfForks;
 
     private PhilosophersManager philosophersManager = new PhilosophersManager();
+    public PhilosophersManagerGUI gui;
 
     public Server () {
         this.port = 12345;
-        this.numberOfForks = 5;
+        this.gui = new PhilosophersManagerGUI(this.philosophersManager);
     }
 
-    public Server (int port, int numberOfForks) {
+    public Server (int port) {
         this.port = port;
-        this.numberOfForks = numberOfForks;
+        this.gui = new PhilosophersManagerGUI(this.philosophersManager);
     }
 
     public void start() throws IOException {

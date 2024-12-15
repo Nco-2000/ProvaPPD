@@ -6,15 +6,23 @@ import java.util.List;
 
 public class PhilosophersManager {
     
-    public int lastUsedId = 0;
+    private int lastUsedId = 0;
 
-    public int numberOfActivePhilosophers = 0;
-    public List<Philosopher> activePhilosophers = new ArrayList<Philosopher>();
+    private int numberOfActivePhilosophers = 0;
+    private List<Philosopher> activePhilosophers = new ArrayList<Philosopher>();
 
-    public List<PhilosopherLog> registeredPhilosophers = new ArrayList<PhilosopherLog>();
+    private List<PhilosopherLog> registeredPhilosophers = new ArrayList<PhilosopherLog>();
 
     private int numberOfForks;
-    public List<Fork> forks = new ArrayList<Fork>();
+    private List<Fork> forks = new ArrayList<Fork>();
+
+    public List getAtcivePhilosophers() {
+        return this.activePhilosophers;
+    }
+
+    public List getForks() {
+        return this.forks;
+    } 
 
     public int getNumberOfActimePhilosophers() {
         return this.numberOfActivePhilosophers;
@@ -44,6 +52,7 @@ public class PhilosophersManager {
         this.activePhilosophers.add(newPhilosopher);
         this.numberOfActivePhilosophers++;
         this.remanageAllForks();
+        new Thread(newPhilosopher).start();
         return newPhilosopher;
     }
 
@@ -54,6 +63,7 @@ public class PhilosophersManager {
                 this.activePhilosophers.add(newPhilosopher);
                 this.numberOfActivePhilosophers++;
                 this.remanageAllForks();
+                new Thread(newPhilosopher).start();
                 return newPhilosopher;
             } else { //Se não, carregar um filosofo.
                 PhilosopherLog log = this.getPhilosopherLog(id);
@@ -61,6 +71,7 @@ public class PhilosophersManager {
                 this.activePhilosophers.add(reloadedPhilosopher);
                 this.numberOfActivePhilosophers++;
                 this.remanageAllForks();
+                new Thread(reloadedPhilosopher).start();
                 return reloadedPhilosopher;
             }
         }
@@ -71,6 +82,8 @@ public class PhilosophersManager {
         for (Iterator<Philosopher> iterator = activePhilosophers.iterator(); iterator.hasNext();) {
             Philosopher philosopher = iterator.next();
             if (philosopher.getId() == id) {
+                philosopher.setState("DESACTIVATING");
+                philosopher.stop();
                 this.savePhilosopherToLog(id);
                 iterator.remove();
                 this.numberOfActivePhilosophers--;
@@ -116,7 +129,8 @@ public class PhilosophersManager {
                 if (this.forks.isEmpty()) {
                     this.forks.add(new Fork(1, "FORK_1"));
                 } else {
-                    this.forks.add(new Fork(this.forks.getLast().getId() + 1, "FORK_" + this.forks.getLast().getId().toString()));
+                    Integer newId = this.forks.getLast().getId() + 1;
+                    this.forks.add(new Fork(newId, "FORK_" + newId.toString()));
                 }
             }
         } else if (this.forks.size() > this.numberOfForks) {
