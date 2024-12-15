@@ -10,6 +10,10 @@ Este projeto implementa uma simulação do **Problema dos Filósofos Jantando** 
 - Obtenção de estatísticas em tempo real sobre os filósofos e o status do sistema.  
 - Interface gráfica (GUI) para visualização da mesa de jantar.  
 
+## Diagrama 
+
+![alt text](<Diagrama Classe Philosophers.drawio.png>)
+
 ## Execução
 
 Conectar ao servidor utilzando o comando ```telnet localhost 12345```.

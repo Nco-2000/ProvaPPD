@@ -90,7 +90,6 @@ public class Philosopher implements Runnable{
     public void assignForks(Fork rightFork, Fork leftFork) {
         this.rightFork = rightFork;
         this.leftFork = leftFork;
-        //this.state = "Assigned forks";
     }
     
     private void sleep(int multiplier)
@@ -101,7 +100,7 @@ public class Philosopher implements Runnable{
         }
     }
 
-    public void think() { //É o que garante que sempre haverá uma brecha para algum filosofo comer.
+    public void think() { 
         this.state = "thinking";
         this.numberOfThoughts++;
         this.thinking();
