@@ -14,6 +14,10 @@ Este projeto implementa uma simulação do **Problema do Jantar Filósofos** uti
 
 ![alt text](<Diagrama Classe Philosophers.drawio.png>)
 
+## Exemplo
+
+![alt text](Exemplo.png)
+
 ## Execução
 
 Conectar ao servidor utilzando o comando ```telnet localhost 12345```.
