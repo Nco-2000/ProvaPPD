@@ -1,8 +1,8 @@
 # ProvaPPD
 
-# Simulação de Filósofos Jantando
+# Simulação do Jantar dos Filósofos Jantando
 
-Este projeto implementa uma simulação do **Problema dos Filósofos Jantando** utilizando Java. A simulação inclui um protocolo de comunicação baseado em comandos, permitindo que os usuários interajam com o servidor, gerenciem filósofos e visualizem seu status e estatísticas.
+Este projeto implementa uma simulação do **Problema do Jantar Filósofos** utilizando Java. A simulação inclui um protocolo de comunicação baseado em comandos, permitindo que os usuários interajam com o servidor, gerenciem filósofos e visualizem seu status e estatísticas.
 
 ## Funcionalidades
 - Protocolo de comunicação baseado em comandos.  
