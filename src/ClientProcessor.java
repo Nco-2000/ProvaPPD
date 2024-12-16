@@ -60,11 +60,16 @@ public class ClientProcessor implements Runnable{
 
                 else if (userInput.startsWith("SETID")) {
                     String newId = this.getIdFromMessage(userInput);
-                    if (newId != null) {
-                        this.Id = Integer.valueOf(newId);
-                        out.println("NEW ID SAVED: " + newId);
+                    if (this.philisopher == null) {
+
+                        if (newId != null) {
+                            this.Id = Integer.valueOf(newId);
+                            out.println("NEW ID SAVED: " + newId);
+                        } else {
+                            out.println("INVALID ID.");
+                        }
                     } else {
-                        out.println("INVALID ID.");
+                        out.println("CANNOT CHANGE ID WHILE A PHILOSOPHER WITH THE CURRENT ID IS ACTIVE.");
                     }
                 }
 

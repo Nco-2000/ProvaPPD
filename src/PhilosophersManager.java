@@ -148,14 +148,14 @@ public class PhilosophersManager {
                 if (this.forks.isEmpty()) {
                     this.forks.add(new Fork(1, "FORK_1"));
                 } else {
-                    Integer newId = this.forks.getLast().getId() + 1;
+                    Integer newId = this.forks.get(this.forks.size() - 1).getId() + 1;
                     this.forks.add(new Fork(newId, "FORK_" + newId.toString()));
                 }
             }
         } else if (this.forks.size() > this.numberOfForks) {
             int forksToDelete = this.forks.size() - this.numberOfForks;
             for (int i = 0; i < forksToDelete; i++) {
-                this.forks.remove(this.forks.getLast());
+                this.forks.remove(this.forks.get(this.forks.size() - 1));
             }
         }
 
