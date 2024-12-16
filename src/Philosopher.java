@@ -76,10 +76,16 @@ public class Philosopher implements Runnable{
     }
 
     public boolean hasLeftFork() {
+        if(this.leftFork == null) {
+            return false;
+        }
         return this.leftFork.isBeingUsedBy(this);
     }
 
     public boolean hasRightFork() {
+        if(this.rightFork == null) {
+            return false;
+        }
         return this.rightFork.isBeingUsedBy(this);
     }
 
@@ -123,7 +129,11 @@ public class Philosopher implements Runnable{
     }
 
     private void eat() throws InterruptedException {
-
+        if(this.state == "DESACTIVATING") {
+            this.stop();
+            return;
+        }
+        
         this.state = "Getting forks";
 
         while (!this.hasBothForks()) { //Tenta pegar o garfo esquerdo, espera até conseguir, se o gardo da direita estiver ocupado ele larga o gardo da esquerda e tenta tudo de novo.
@@ -136,7 +146,14 @@ public class Philosopher implements Runnable{
                 this.rightFork.pickUp(this); //Se entre a checagem e ele tentar pegar, outro filósofo pegar, ele toma um segundo wait, nesse caso ele não vai largar o primeiro garfo.
                 this.state = "RIGHT FORK (" + this.rightFork.getName() + ") PICKED UP";
             } else {
-                if(true){this.leftFork.pickDown(this);}
+                this.leftFork.pickDown(this);
+            }
+
+            if(!this.hasBothForks()) {
+                if(this.hasLeftFork())
+                    this.leftFork.pickDown(this);
+                if(this.hasRightFork())
+                    this.rightFork.pickDown(this);
             }
         }
 
@@ -159,17 +176,21 @@ public class Philosopher implements Runnable{
     @Override
     public void run() {
         try {
-            while (this.state != "DESACTIVATING") {
+            while (this.state != "DESACTIVATING" || !Thread.currentThread().interrupted()) {
                 this.think();
                 this.eat();
             }
-            
         } catch (Exception e) {
             Thread.currentThread().interrupt();
         }
+        if(this.hasLeftFork())
+            this.leftFork.pickDown(this);
+        if(this.hasRightFork())
+            this.rightFork.pickDown(this);
     }
 
     public void stop() {
+        this.state = "DESACTIVATING";
         if (this.hasLeftFork()) {
             this.leftFork.pickDown(this);
         }

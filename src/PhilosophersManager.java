@@ -84,6 +84,7 @@ public class PhilosophersManager {
             if (philosopher.getId() == id) {
                 philosopher.setState("DESACTIVATING");
                 philosopher.stop();
+                philosopher.assignForks(null, null);
                 this.savePhilosopherToLog(id);
                 iterator.remove();
                 this.numberOfActivePhilosophers--;
@@ -103,13 +104,22 @@ public class PhilosophersManager {
         return null;
     }
 
+    public Integer getPhilosopherLogIndexById(int id) {
+        for (PhilosopherLog philosopherLog : this.registeredPhilosophers) {
+            if (philosopherLog.getId() == id) {
+                return this.registeredPhilosophers.indexOf(philosopherLog);
+            }
+        }
+        return null;
+    }
+
     public PhilosopherLog savePhilosopherToLog(int id) {
         Philosopher activePhilosopher = this.getPhilosopher(id);
 
         PhilosopherLog philosopherLog = new PhilosopherLog(activePhilosopher);
 
         if (this.getPhilosopherLog(id) != null) {
-            this.registeredPhilosophers.set(id - 1, philosopherLog);
+            this.registeredPhilosophers.set(this.getPhilosopherLogIndexById(id), philosopherLog);
         } else {
             this.registeredPhilosophers.add(philosopherLog);
         }
@@ -117,6 +127,15 @@ public class PhilosophersManager {
     }
 
     public synchronized void remanageAllForks() {
+
+        for(Philosopher philosopher : this.activePhilosophers) {
+            philosopher.assignForks(null, null);
+        }
+
+        for(Fork fork : this.forks) {
+            fork.pickDown(fork.getUser());
+        }
+
         if (this.numberOfActivePhilosophers == 1) {
             this.numberOfForks = 2;
         } else {
